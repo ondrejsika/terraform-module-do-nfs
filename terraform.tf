@@ -3,12 +3,12 @@ variable "cloudflare_email" {}
 variable "cloudflare_token" {}
 
 provider "digitalocean" {
-  token = "${var.do_token}"
+  token = var.do_token
 }
 
 provider "cloudflare" {
-  email = "${var.cloudflare_email}"
-  token = "${var.cloudflare_token}"
+  email = var.cloudflare_email
+  token = var.cloudflare_token
 }
 
 data "digitalocean_droplet_snapshot" "nfs" {
@@ -24,7 +24,7 @@ data "digitalocean_ssh_key" "ondrejsika" {
 
 
 resource "digitalocean_droplet" "nfs" {
-  image  = "${data.digitalocean_droplet_snapshot.nfs.id}"
+  image  = data.digitalocean_droplet_snapshot.nfs.id
   name   = "nfs"
   region = "fra1"
   size   = "s-1vcpu-1gb"
@@ -36,7 +36,7 @@ resource "digitalocean_droplet" "nfs" {
 resource "cloudflare_record" "nfs" {
   domain = "sikademo.com"
   name   = "nfs"
-  value  = "${digitalocean_droplet.nfs.ipv4_address}"
+  value  = digitalocean_droplet.nfs.ipv4_address
   type   = "A"
   proxied = false
 }

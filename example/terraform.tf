@@ -18,7 +18,9 @@ data "digitalocean_ssh_key" "ondrejsika" {
 
 module "nfs" {
   source = "./.."
-  tf_ssh_key = data.digitalocean_ssh_key.ondrejsika
+  ssh_key = [
+    data.digitalocean_ssh_key.ondrejsika.id
+  ]
 }
 
 resource "cloudflare_record" "nfs" {
